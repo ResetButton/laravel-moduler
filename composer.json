@@ -1,0 +1,27 @@
+{
+    "name": "resetbutton/laravel-moduler",
+    "description": "Create module structure - put Controllers/Models/ etc into root <modules> directory",
+    "type": "library",
+    "require": {
+        "php": ">=7.4",
+        "laravel/framework": ">=8.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "ResetButton\\Moduler\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Alexey Shatrov"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ResetButton\\Moduler\\ModulerServiceProvider"
+            ]
+        }
+    }
+}
