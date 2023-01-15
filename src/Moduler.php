@@ -9,13 +9,19 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 class Moduler
 {
 
-    private string $path;
+    private string $modulesFolder;
     private string $moduleName;
+    private string $packagePath;
 
     public function __construct(string $moduleName, string $folder = 'modules')
     {
         $this->moduleName = $moduleName;
-        $this->path = base_path($folder);
+        $this->modulesFolder = base_path($folder);
+    }
+
+    public function makeRouteComponent(): bool
+    {
+        return $this->makeStubComponent('route', __DIR__ . '/Console/stubs/route.stub');
     }
 
     public function makeStubComponent(string $moduleComponent, string $stubPath) : bool
@@ -28,7 +34,7 @@ class Moduler
 
         //Create structure
         $moduleComponentFolder = strpos($moduleComponent, '/') ? $moduleComponent : $moduleComponent . 's'; //if there no subfolder - add 's' at the end
-        File::ensureDirectoryExists($this->path . '/' . $this->moduleName . '/' . $moduleComponentFolder);
+        File::ensureDirectoryExists($this->modulesFolder . '/' . $this->moduleName . '/' . $moduleComponentFolder);
 
         //Replacing placeholders in stub
         $stub = file_get_contents($fullStubPath);
@@ -38,7 +44,7 @@ class Moduler
 
         //Write results
 
-        $moduleComponentPath = $this->path . '/' . $this->moduleName .'/'. $moduleComponentFolder . '/' . $this->moduleName . '.php';
+        $moduleComponentPath = $this->modulesFolder . '/' . $this->moduleName .'/'. $moduleComponentFolder . '/' . $this->moduleName . '.php';
         $result = File::put($moduleComponentPath, $stub);
 
         if (app()->runningInConsole()) {
@@ -49,17 +55,10 @@ class Moduler
         return $result;
     }
 
-    public function makeCustomComponent(string $moduleComponent, string $stub): bool
-    {
-        $stubPath = storage_path('app').'/'.md5($moduleComponent).'.stub';
-        File::put($stubPath,$stub);
-        $result = $this->makeStubComponent($moduleComponent, $stubPath);
-        File::delete($stubPath);
-        return $result;
-    }
 
-    public function getPath() : string
+
+    public function getModulesFolder() : string
     {
-        return $this->path;
+        return $this->modulesFolder;
     }
 }
