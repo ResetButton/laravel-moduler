@@ -19,6 +19,36 @@ class Moduler
         $this->modulesFolder = base_path($folder);
     }
 
+    public function makeControllerComponent(): bool
+    {
+        return $this->makeStubComponent('Controller', 'vendor/laravel/framework/src/Illuminate/Routing/Console/stubs/controller.plain.stub');
+    }
+
+    public function makeModelComponent(): bool
+    {
+        return $this->makeStubComponent('Model', 'vendor/laravel/framework/src/Illuminate/Foundation/Console/stubs/model.stub');
+    }
+
+    public function makeRequestComponent(): bool
+    {
+        return $this->makeStubComponent('Request', 'vendor/laravel/framework/src/Illuminate/Foundation/Console/stubs/request.stub');
+    }
+
+    public function makeResourceComponent(): bool
+    {
+        return $this->makeStubComponent('Resource', 'vendor/laravel/framework/src/Illuminate/Foundation/Console/stubs/resource.stub');
+    }
+
+    public function makeSeederComponent(): bool
+    {
+        return $this->makeStubComponent('seeder', 'vendor/laravel/framework/src/Illuminate/Database/Console/Seeds/stubs/seeder.stub');
+    }
+
+    public function makeUnitTestComponent(): bool
+    {
+        return $this->makeStubComponent('tests/Unit', 'vendor/laravel/framework/src/Illuminate/Foundation/Console/stubs/test.stub');
+    }
+
     public function makeRouteComponent(): bool
     {
         return $this->makeStubComponent('route', __DIR__ . '/Console/stubs/route.stub');
@@ -26,7 +56,7 @@ class Moduler
 
     public function makeStubComponent(string $moduleComponent, string $stubPath) : bool
     {
-        //Check stub
+        //Check stub existence
         $fullStubPath = base_path(str_replace(base_path().'/', '', $stubPath));
         if (!File::exists($fullStubPath)) {
             throw new FileNotFoundException('Stub not found at '. $fullStubPath);
@@ -43,7 +73,6 @@ class Moduler
         $stub = str_replace('{{ class }}', $this->moduleName, $stub);
 
         //Write results
-
         $moduleComponentPath = $this->modulesFolder . '/' . $this->moduleName .'/'. $moduleComponentFolder . '/' . $this->moduleName . '.php';
         $result = File::put($moduleComponentPath, $stub);
 
@@ -54,8 +83,6 @@ class Moduler
 
         return $result;
     }
-
-
 
     public function getModulesFolder() : string
     {

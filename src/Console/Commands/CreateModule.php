@@ -37,12 +37,14 @@ class CreateModule extends Command
         $moduleName = trim($this->argument('name'));
 
         $moduler = new Moduler($moduleName);
-        $moduler->makeStubComponent('Controller', 'vendor/laravel/framework/src/Illuminate/Routing/Console/stubs/controller.plain.stub');
-        $moduler->makeStubComponent('Model', 'vendor/laravel/framework/src/Illuminate/Foundation/Console/stubs/model.stub');
-        $moduler->makeStubComponent('Request', 'vendor/laravel/framework/src/Illuminate/Foundation/Console/stubs/request.stub');
-        $moduler->makeStubComponent('Resource', 'vendor/laravel/framework/src/Illuminate/Foundation/Console/stubs/resource.stub');
-        $moduler->makeStubComponent('seeder', 'vendor/laravel/framework/src/Illuminate/Database/Console/Seeds/stubs/seeder.stub');
-        $moduler->makeStubComponent('tests/Unit', 'vendor/laravel/framework/src/Illuminate/Foundation/Console/stubs/test.stub');
+        $moduler->makeRouteComponent();
+        $moduler->makeControllerComponent();
+        $moduler->makeModelComponent();
+        $moduler->makeRequestComponent();
+        $moduler->makeResourceComponent();
+        $moduler->makeSeederComponent();
+        $moduler->makeUnitTestComponent();
+
 
         return Command::SUCCESS;
     }
