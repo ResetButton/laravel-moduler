@@ -38,6 +38,7 @@ class CreateModule extends Command
 
         $moduler = new Moduler($moduleName);
         $moduler->makeRouteComponent();
+        $moduler->makeConfigComponent();
         $moduler->makeControllerComponent();
         $moduler->makeModelComponent();
         $moduler->makeRequestComponent();

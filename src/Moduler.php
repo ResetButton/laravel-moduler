@@ -10,6 +10,7 @@ class Moduler
 {
 
     private string $modulesFolder;
+    //todo folder name change
     private string $moduleName;
     private string $packagePath;
 
@@ -54,7 +55,12 @@ class Moduler
         return $this->makeStubComponent('route', __DIR__ . '/Console/stubs/route.stub');
     }
 
-    public function makeStubComponent(string $moduleComponent, string $stubPath) : bool
+    public function makeConfigComponent(): bool
+    {
+        return $this->makeStubComponent('config', __DIR__ . '/Console/stubs/config.stub', true);
+    }
+
+    public function makeStubComponent(string $moduleComponent, string $stubPath, bool $lowercase = false) : bool
     {
         //Check stub existence
         $fullStubPath = base_path(str_replace(base_path().'/', '', $stubPath));
@@ -64,6 +70,9 @@ class Moduler
 
         //Create structure
         $moduleComponentFolder = strpos($moduleComponent, '/') ? $moduleComponent : $moduleComponent . 's'; //if there no subfolder - add 's' at the end
+        //Patch for "config" component without 's'
+        ($moduleComponent == 'config') ? $moduleComponentFolder = rtrim($moduleComponentFolder,'s') : null;
+
         File::ensureDirectoryExists($this->modulesFolder . '/' . $this->moduleName . '/' . $moduleComponentFolder);
 
         //Replacing placeholders in stub
@@ -73,7 +82,8 @@ class Moduler
         $stub = str_replace('{{ class }}', $this->moduleName, $stub);
 
         //Write results
-        $moduleComponentPath = $this->modulesFolder . '/' . $this->moduleName .'/'. $moduleComponentFolder . '/' . $this->moduleName . '.php';
+        $moduleFilename = $lowercase ? strtolower($this->moduleName . '.php') : $this->moduleName . '.php';
+        $moduleComponentPath = $this->modulesFolder . '/' . $this->moduleName .'/'. $moduleComponentFolder . '/' . $moduleFilename;
         $result = File::put($moduleComponentPath, $stub);
 
         if (app()->runningInConsole()) {
@@ -84,8 +94,4 @@ class Moduler
         return $result;
     }
 
-    public function getModulesFolder() : string
-    {
-        return $this->modulesFolder;
-    }
 }
