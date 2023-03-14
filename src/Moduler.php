@@ -60,6 +60,20 @@ class Moduler
         return $this->makeStubComponent('config', __DIR__ . '/Console/stubs/config.stub', true);
     }
 
+    public function makeMigrationComponent(): bool
+    {
+        return $this->createFolder('migration', true);
+    }
+
+    public function createFolder(string $moduleComponent, bool $lowercase = false) : bool
+    {
+        //Create folder
+        $moduleComponentFolder = strpos($moduleComponent, '/') ? $moduleComponent : $moduleComponent . 's'; //if there no subfolder - add 's' at the end
+        File::ensureDirectoryExists($this->modulesFolder . '/' . $this->moduleName . '/' . $moduleComponentFolder);
+
+        return true;
+    }
+
     public function makeStubComponent(string $moduleComponent, string $stubPath, bool $lowercase = false) : bool
     {
         //Check stub existence

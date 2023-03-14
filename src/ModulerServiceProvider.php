@@ -28,6 +28,12 @@ class ModulerServiceProvider extends ServiceProvider
                 config([strtolower($moduleName) => require $configPath]) ;
             }
         }
+
+        //load migrations
+        foreach (self::getModulesList() as $moduleName) {
+            $this->loadMigrationsFrom(base_path($modulesFolder.'/'.$moduleName.'/migrations/'));
+        }
+
     }
 
     /**
